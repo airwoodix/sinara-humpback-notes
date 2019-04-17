@@ -1,0 +1,12 @@
+* Sinara Humpback
+
+** Documentation
+
+  - [[https://github.com/sinara-hw/Humpback/][Repository]]
+  - [[file:doc/schematics_v1.0.pdf][Schematics v1.0]]
+  - [[file:doc/FPGA_pins_v1.0.xlsx][FPGA pinout v1.0]]
+
+** OrangePi Zero
+
+  - ArchLinux ARM [[https://github.com/nguiard/archlinux-orange-pi-zero][image]]
+  - linux-sunxi [[https://linux-sunxi.org/Xunlong_Orange_Pi_Zero][wiki page]]
