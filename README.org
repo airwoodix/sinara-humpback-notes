@@ -8,5 +8,18 @@
 
 ** OrangePi Zero
 
-  - ArchLinux ARM [[https://github.com/nguiard/archlinux-orange-pi-zero][image]]
+  - ArchLinux ARM [[https://github.com/nguiard/archlinux-orange-pi-zero][image]], upgrade to kernel 5.1.0-rc5-1 works
   - linux-sunxi [[https://linux-sunxi.org/Xunlong_Orange_Pi_Zero][wiki page]]
+  - OrangePi Zero [[file:doc/orange-pi-zero_schematics_v1_11.pdf][schematics]]
+
+*** Patched devicetree
+
+Working on [[https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/snapshot/linux-5.1-rc5.tar.gz][linux-5.1-rc5]] tree. The toplevel devicetree is =arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts=. Compilation:
+
+#+BEGIN_SRC bash
+zcat /proc/config.gz > .config
+make sun8i-h2-plus-orangepi-zero.dtb
+#+END_SRC
+
+*** Flash FPGA
+
