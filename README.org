@@ -5,6 +5,8 @@
   - [[https://github.com/sinara-hw/Humpback/][Repository]]
   - [[file:doc/schematics_v1.0.pdf][Schematics v1.0]]
   - [[file:doc/FPGA_pins_v1.0.xlsx][FPGA pinout v1.0]]
+  - [[https://github.com/sinara-hw/Humpback/releases/download/v1.0/Humpback.PDF][Schematics v1.0]]
+  - [[https://github.com/sinara-hw/Humpback/releases/download/v1.0/FPGA_pins.xlsx][FPGA pinout v1.0]]
 
 ** OrangePi Zero
 
