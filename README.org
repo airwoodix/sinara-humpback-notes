@@ -10,7 +10,7 @@
 
   - ArchLinux ARM [[https://github.com/nguiard/archlinux-orange-pi-zero][image]], upgrade to kernel 5.1.0-rc5-1 works
   - =linux-sunxi= [[https://linux-sunxi.org/Xunlong_Orange_Pi_Zero][wiki page]]
-  - OrangePi Zero [[file:doc/orange-pi-zero_schematics_v1_11.pdf][schematics]] (from =linux-sunxi= wiki)
+  - OrangePi Zero [[https://linux-sunxi.org/File:Orange-Pi-Zero-Schanetics-v1_11.pdf][schematics]]
 
 *** Patched devicetree
 
