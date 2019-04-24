@@ -21,5 +21,17 @@ zcat /proc/config.gz > .config
 make sun8i-h2-plus-orangepi-zero.dtb
 #+END_SRC
 
-*** Flash FPGA
+*** Configure FPGA
+
+The configuration flash on the board is a =AT25SF081-SHD-T= ([[http://www.adestotech.com/wp-content/uploads/DS-AT25SF081_045.pdf][datasheet]]). The configuration flow is described in the corresponding [[http://www.latticesemi.com/-/media/LatticeSemi/Documents/ApplicationNotes/IK/FPGA-TN-02001-3-1-iCE40-Programming-Configuration.ashx?document_id=46502][application note]]. In SPI master configuration mode, this basically looks like:
+
+  - hold =SS= (chipselect) high
+  - pull =CRESET= low
+  - write bitstream to flash
+  - pull =CRESET= high to load the bitstream into FPGA
+  - check =CDONE=
+
+One can write the bitstream to the flash memory using the [[https://flashrom.org/Flashrom][flashrom]] utility (need v1.1-rc1+). =flashrom='s =linux_spi= driver requires access to the SPI bus via =spidev=. One can add a bit-banged SPI driver to the devicetree (linux tree [[file:orange-pi/linux/0001-ARM-sun8i-h2-OPi-Zero-add-Sinara-Humpback-FPGA-confi.patch][patch]]). The [[file:orange-pi/scripts/flash.sh][flash.sh]] script runs the configuration flow (requires [[https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/][libgpiod]]).
+
+Note: there is support for iCE40 in SPI slave configuration mode for the kernel's =fpga_manager= ([[https://elixir.bootlin.com/linux/v5.1-rc5/source/drivers/fpga/ice40-spi.c][source]], [[https://elixir.bootlin.com/linux/v5.1-rc5/source/Documentation/devicetree/bindings/fpga/lattice-ice40-fpga-mgr.txt][devicetree bindings documentation]]).
 
