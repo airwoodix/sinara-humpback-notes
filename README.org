@@ -8,11 +8,72 @@
 
 ** OrangePi Zero
 
-  - ArchLinux ARM [[https://github.com/nguiard/archlinux-orange-pi-zero][image]], upgrade to kernel 5.1.0-rc5-1 works
   - =linux-sunxi= [[https://linux-sunxi.org/Xunlong_Orange_Pi_Zero][wiki page]]
   - OrangePi Zero [[https://linux-sunxi.org/File:Orange-Pi-Zero-Schanetics-v1_11.pdf][schematics]]
 
-*** Patched devicetree
+*** Armbian
+
+  - [[https://www.armbian.com/orange-pi-zero/][Armbian page]]
+
+**** Custom kernel
+
+  Stock Armbian kernel is not compiled with =CONFIG_SPI_GPIO= enabled, so the =spi-gpio= module is not available.
+
+  The Armbian [[https://docs.armbian.com/Developer-Guide_Build-Preparation/][build system]] is fairly easy to use, e.g. with [[https://docs.armbian.com/Developer-Guide_Using-Vagrant/][Vagrant]]. There may be issues with the dependency solver when installing =vagrant-disksize=. If so, setting the environment variable =VAGRANT_DISABLE_STRICT_DEPENDENCY_ENFORCEMENT=1= can help.
+
+  Enable GPIO-bitbang in SPI drivers and build with:
+
+  #+begin_src bash
+    ./compile.sh BRANCH=current BOARD=orangepizero KERNEL_ONLY=yes RELEASE=buster
+  #+end_src
+
+  Install the new kernel through the =deb= packages in =output/=. =linux-image-*= and =linux-headers-*= should be sufficient.
+
+**** Device-tree overlay
+
+  Install the device-tree overlay [[file:orange-pi/linux/humpback-spi-cfg.dts][humpback-spi-cfg.dts]]:
+
+  #+begin_src bash
+    armbian-add-overlay humpback-spi-cfg.dts
+  #+end_src
+
+  This configures a SPI master for the FPGA's external flash memory and a corresponding =spidev= userspace driver.
+
+**** Flash detection
+
+  Use [[https://flashrom.org/Flashrom][Flashrom]]. =AT25SF081= is only supported since v1.1-rc1. The package in =buster= is 1.0. Since there're no dependencies, the easiest is to download the package from the [[https://packages.debian.org/bullseye/flashrom][bullseye archive]] directly (arch: armhf).
+
+  Test if the flash is detected:
+
+  #+begin_src bash
+    flashrom -p linux_spi:dev=/dev/spidev0.0
+  #+end_src
+
+  should print something like:
+
+  #+begin_example
+    Found Atmel flash chip "AT25SF081" (1024 kB, SPI) on linux_spi.
+  #+end_example
+
+**** FPGA flashing
+
+  Install dependencies:
+     
+  #+begin_src bash
+    apt install gpiod
+  #+end_src
+
+  Use [[file:orange-pi/scripts/flash.sh][flash.sh]].
+
+**** TODO FPGA Manager
+
+  as alternative to writing the flash directly? Can load bitstream at boot.
+
+*** ArchLinux ARM (old)
+
+  - ArchLinux ARM [[https://github.com/nguiard/archlinux-orange-pi-zero][image]], upgrade to kernel 5.1.0-rc5-1 works
+    
+**** Patched devicetree
 
 Working on [[https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/snapshot/linux-5.1-rc5.tar.gz][linux-5.1-rc5]] tree. The toplevel devicetree is =arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts=. Compilation:
 
@@ -21,7 +82,7 @@ zcat /proc/config.gz > .config
 make sun8i-h2-plus-orangepi-zero.dtb
 #+END_SRC
 
-*** Configure FPGA
+**** Configure FPGA
 
 The configuration flash on the board is a =AT25SF081-SHD-T= ([[http://www.adestotech.com/wp-content/uploads/DS-AT25SF081_045.pdf][datasheet]]). The configuration flow is described in the corresponding [[http://www.latticesemi.com/-/media/LatticeSemi/Documents/ApplicationNotes/IK/FPGA-TN-02001-3-1-iCE40-Programming-Configuration.ashx?document_id=46502][application note]]. In SPI master configuration mode, this basically looks like:
 
